@@ -32,3 +32,7 @@ tzdata=2022a=hda174b7_0
 wheel=0.37.1=pyhd3eb1b0_0
 xz=5.2.5=h1de35cc_0
 zlib=1.2.12=h4dc903c_2
+
+numpy~=1.21.5
+scipy~=1.7.3
+scikit-learn~=1.0.2
