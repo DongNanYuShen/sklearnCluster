@@ -51,18 +51,23 @@ def load():
     return data, labels
 
 
-# 画图
-def plot(data, label, title):
+# tsne降维
+def generateTsne(data):
     # 降维
     tsne = TSNE(n_components=2).fit_transform(data)
     # 归一化
     tsne_min, tsne_max = tsne.min(0), tsne.max(0)
     tsne_norm = (tsne - tsne_min) / (tsne_max - tsne_min)
+    return tsne, tsne_norm
+
+
+# 画图
+def plot(tsne, label, title):
     # 画图
     fig, ax = plt.subplots()
-    scatter = ax.scatter(tsne_norm[:, 0], tsne_norm[:, 1], marker=".", c=label)
+    scatter = ax.scatter(tsne[:, 0], tsne[:, 1], marker=".", c=label)
     legend = ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
-    ax.set_title(title)    # 设置标题
+    ax.set_title(title)  # 设置标题
     ax.add_artist(legend)
     plt.show()
 
@@ -71,7 +76,10 @@ if __name__ == '__main__':
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - START")
     X, y = load()
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DATA LOADING FINISHED")
-    plot(X, y, "Original Data")
+    tsne, norm_tsne = generateTsne(X)
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - TSNE GENERATING FINISHED")
+    plot(tsne, y, "Original Data by tsne")
+    plot(norm_tsne, y, "Original Data by norm_tsne")
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING BEGIN")
     spectral_clustering(X, y)
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING FINISHED")
