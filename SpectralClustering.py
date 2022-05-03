@@ -9,23 +9,26 @@ from sklearn.metrics import accuracy_score
 # 执行1000次谱聚类，取最优结果返回
 def spectral_clustering(X, y):
     n_clusters_array = np.array([6, 7, 8, 9])
-    gamma_array = np.array([0.001, 0.01, 0.1, 1])
+    gamma_array = np.array([0.01, 0.1, 1, 10])
     y_best = y
     acc_best = 0
     n_clusters_best = 6
     gamma_best = 0.01
-    for i in range(1000):
+    for i in range(10):
         n_clusters = np.random.choice(n_clusters_array)
         gamma = np.random.choice(gamma_array)
-        y_pred = SpectralClustering(n_clusters=n_clusters, gamma=gamma).fit_predict(X)
+        sc = SpectralClustering(n_clusters=n_clusters, gamma=gamma).fit(X)
+        y_pred = sc.labels_
         acc = accuracy_score(y, y_pred)
         if acc > acc_best:
             n_clusters_best = n_clusters
             gamma_best = gamma
             y_best = y_pred
-        print("Spectral Clustering " + str(i) + " Scores: " + str(acc))
+            acc_best = acc
+        print("Spectral Clustering " + str(i) + (" gamma=" + str(gamma) + "; n_clusters=" + str(n_clusters)) + " Scores: " + str(acc))
     print("Spectral Clustering Best:\n")
     print(y_best[0:100])
     print(n_clusters_best)
     print(gamma_best)
+    np.savetxt("y_best_pred", y_best)
     return y_best, n_clusters_best, gamma_best

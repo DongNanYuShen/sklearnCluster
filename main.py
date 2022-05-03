@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 from scipy.io import loadmat
 from SpectralClustering import spectral_clustering
 from sklearn.manifold import TSNE
+from DBSCAN import RunDBSCAN
 
+file_path = "/Users/huyu/Library/Mobile Documents/com~apple~CloudDocs/PALM/模拟信号聚类/模拟信号（提取出来的特征）/"
 
 def load():
-    file_path = "/Users/huyu/Library/Mobile Documents/com~apple~CloudDocs/PALM/模拟信号聚类/模拟信号（提取出来的特征）/"
     # 读取模拟信号特征矩阵，同时记录最大的shape
     # 读取.mat文件时的变量
     original_data = []
@@ -69,7 +70,7 @@ def plot(tsne, label, title):
     legend = ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
     ax.set_title(title)  # 设置标题
     ax.add_artist(legend)
-    plt.show()
+    plt.savefig(file_path + title)
 
 
 if __name__ == '__main__':
@@ -81,5 +82,8 @@ if __name__ == '__main__':
     plot(tsne, y, "Original Data by tsne")
     plot(norm_tsne, y, "Original Data by norm_tsne")
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING BEGIN")
-    spectral_clustering(X, y)
+    # spectral_clustering(X, y)
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING FINISHED")
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DBSCAN BEGIN")
+    RunDBSCAN(X, y)
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DBSCAN FINISHED")
