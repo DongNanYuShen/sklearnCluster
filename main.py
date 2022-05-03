@@ -1,13 +1,17 @@
 import time
-from scipy.io import loadmat
 import numpy as np
+import matplotlib.pyplot as plt
+
+from scipy.io import loadmat
+from SpectralClustering import spectral_clustering
+from sklearn.manifold import TSNE
 
 
 def load():
+    file_path = "/Users/huyu/Library/Mobile Documents/com~apple~CloudDocs/PALM/模拟信号聚类/模拟信号（提取出来的特征）/"
     # 读取模拟信号特征矩阵，同时记录最大的shape
     # 读取.mat文件时的变量
     original_data = []
-    file_path = "/Users/huyu/Library/Mobile Documents/com~apple~CloudDocs/PALM/模拟信号聚类/模拟信号（提取出来的特征）/"
     signal_i = 1
     work_i = 1
     # 记录最大shape的变量
@@ -39,18 +43,35 @@ def load():
             data[i] = np.pad(original_data[i], (0, max_dim - original_data[i].shape[0]), "constant",
                              constant_values=(0, 0))
 
-    print(data.shape)
-
     # 制作标签
     labels = np.array([np.ones((500,), dtype=int), 2 * np.ones((500,), dtype=int), 3 * np.ones((500,), dtype=int),
                        4 * np.ones((500,), dtype=int), 5 * np.ones((500,), dtype=int), 6 * np.ones((500,), dtype=int)])
     labels = labels.reshape((1, -1))[0]
-    print(labels.shape)
 
     return data, labels
 
 
+# 画图
+def plot(data, label, title):
+    # 降维
+    tsne = TSNE(n_components=2, learning_rate='auto', init='pca').fit_transform(data)
+    # 归一化
+    tsne_min, tsne_max = tsne.min(0), tsne.max(0)
+    tsne_norm = (tsne - tsne_min) / (tsne_max - tsne_min)
+    # 画图
+    fig, ax = plt.subplots()
+    ax.set_title(title)    # 设置标题
+    plt.scatter(tsne_norm[:, 0], tsne_norm[:, 1], marker=".", c=label)
+    legend1 = ax.legend(*plt.scatter.legend_elements(), loc="upper right", title="Classes")
+    ax.add_artist(legend1)
+    plt.show()
+
+
 if __name__ == '__main__':
-    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - START\n")
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - START")
     X, y = load()
-    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DATA LOADING FINISHED\n")
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DATA LOADING FINISHED")
+    plot(X, y, "Original Data")
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING BEGIN")
+    spectral_clustering(X, y)
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING FINISHED")
