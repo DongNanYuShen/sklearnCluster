@@ -54,16 +54,16 @@ def load():
 # 画图
 def plot(data, label, title):
     # 降维
-    tsne = TSNE(n_components=2, learning_rate='auto', init='pca').fit_transform(data)
+    tsne = TSNE(n_components=2).fit_transform(data)
     # 归一化
     tsne_min, tsne_max = tsne.min(0), tsne.max(0)
     tsne_norm = (tsne - tsne_min) / (tsne_max - tsne_min)
     # 画图
     fig, ax = plt.subplots()
+    scatter = ax.scatter(tsne_norm[:, 0], tsne_norm[:, 1], marker=".", c=label)
+    legend = ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
     ax.set_title(title)    # 设置标题
-    plt.scatter(tsne_norm[:, 0], tsne_norm[:, 1], marker=".", c=label)
-    legend1 = ax.legend(*plt.scatter.legend_elements(), loc="upper right", title="Classes")
-    ax.add_artist(legend1)
+    ax.add_artist(legend)
     plt.show()
 
 
