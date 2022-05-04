@@ -60,7 +60,7 @@ def load():
 # tsne降维
 def generateTsne(data):
     # 降维
-    tsne = TSNE(n_components=2, init="random", learning_rate="auto", n_jobs=-1).fit_transform(data)
+    tsne = TSNE(n_components=2, n_jobs=-1).fit_transform(data)
     # 归一化
     tsne_min, tsne_max = tsne.min(0), tsne.max(0)
     tsne_norm = (tsne - tsne_min) / (tsne_max - tsne_min)
