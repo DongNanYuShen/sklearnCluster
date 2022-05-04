@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from scipy.io import loadmat
-from SpectralClustering import spectral_clustering
+from SpectralClustering import RunSpectralClustering
 from DBSCAN import RunDBSCAN
 from kmeans import RunKMeans
 from sklearn.manifold import TSNE
@@ -46,6 +46,8 @@ def load():
         if original_data[i].shape[0] < max_dim:
             data[i] = np.pad(original_data[i], (0, max_dim - original_data[i].shape[0]), "constant",
                              constant_values=(0, 0))
+        else:
+            data[i] = original_data[i]
 
     # 制作标签
     labels = np.array([np.ones((500,), dtype=int), 2 * np.ones((500,), dtype=int), 3 * np.ones((500,), dtype=int),
@@ -58,7 +60,7 @@ def load():
 # tsne降维
 def generateTsne(data):
     # 降维
-    tsne = TSNE(n_components=2).fit_transform(data)
+    tsne = TSNE(n_components=2, init="random", learning_rate="auto", n_jobs=-1).fit_transform(data)
     # 归一化
     tsne_min, tsne_max = tsne.min(0), tsne.max(0)
     tsne_norm = (tsne - tsne_min) / (tsne_max - tsne_min)
@@ -85,8 +87,11 @@ if __name__ == '__main__':
     plot(tsne, y, "Original Data by tsne")
     plot(norm_tsne, y, "Original Data by norm_tsne")
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING BEGIN")
-    # spectral_clustering(X, y)
+    RunSpectralClustering(X, y)
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING FINISHED")
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DBSCAN BEGIN")
-    RunKMeans(X, y)
+    RunDBSCAN(X, y)
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DBSCAN FINISHED")
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - KMeans BEGIN")
+    RunKMeans(X, y)
+    print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - KMeans FINISHED")

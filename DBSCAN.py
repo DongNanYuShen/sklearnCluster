@@ -26,4 +26,4 @@ def RunDBSCAN(X, y):
                   "     Acc: " + str(acc) +
                   "     v_measure:" + str(v_measure))
     print("DBSCAN Best: " + str(acc_best) + " ; " + str(v_measure_best))
-    np.savetxt("y_best_pred", label_best)
+    np.savetxt("y_best_pred_by_DBSCAN", label_best)
