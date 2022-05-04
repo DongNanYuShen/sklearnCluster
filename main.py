@@ -4,10 +4,12 @@ import matplotlib.pyplot as plt
 
 from scipy.io import loadmat
 from SpectralClustering import spectral_clustering
-from sklearn.manifold import TSNE
 from DBSCAN import RunDBSCAN
+from kmeans import RunKMeans
+from sklearn.manifold import TSNE
 
-file_path = "/Users/huyu/Library/Mobile Documents/com~apple~CloudDocs/PALM/模拟信号聚类/模拟信号（提取出来的特征）/"
+# file_path = "/Users/huyu/Library/Mobile Documents/com~apple~CloudDocs/PALM/模拟信号聚类/模拟信号（提取出来的特征）/"
+file_path = "C:\\Users\\Mister\\Desktop\\模拟信号\\GS-SPACE\\ivector\\data\\"
 
 
 def load():
@@ -22,7 +24,7 @@ def load():
         for file_i in range(1, 501):
             # 读取.mat文件
             file = loadmat(file_path + ("train" + str(train_i)) +
-                           ("/signal" + str(signal_i) + "_work" + str(work_i) + "_secondDifference" + str(file_i)) +
+                           ("\\signal" + str(signal_i) + "_work" + str(work_i) + "_secondDifference" + str(file_i)) +
                            ".mat")
             ccc = file.get("ccc")
             # 添加数据到list中，就不用多次读取了
@@ -86,5 +88,5 @@ if __name__ == '__main__':
     # spectral_clustering(X, y)
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING FINISHED")
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DBSCAN BEGIN")
-    RunDBSCAN(X, y)
+    RunKMeans(X, y)
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DBSCAN FINISHED")
