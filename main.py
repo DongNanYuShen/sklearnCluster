@@ -71,7 +71,7 @@ def load():
 def generateTsne(data):
     if os.path.exists(file_path + "tsne.mat"):
         file = h5py.File(file_path + "tsne.mat")
-        tsne = file["Y"][:]
+        tsne = file["X_tsne"][:]
         tsne = np.transpose(tsne)
     else:
         # 降维
@@ -116,13 +116,13 @@ if __name__ == '__main__':
     plot(norm_tsne, y, "Original Data by norm_tsne")
 
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING BEGIN")
-    y_pred_SpectralClustering = RunMySpectralClustering(prosseing(X), y)
+    y_pred_SpectralClustering = RunStanderSpectralClustering(X, y)
     plot(tsne, y_pred_SpectralClustering, "SpectralClustering")
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - SPECTRAL CLUSTERING FINISHED")
 
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DBSCAN BEGIN")
-    y_pred_DBSCAN = RunDBSCAN(prosseing(X), y)
-    plot(tsne, y_pred_DBSCAN, "DBSCAN")
+    # y_pred_DBSCAN = RunDBSCAN(prosseing(X), y)
+    # plot(tsne, y_pred_DBSCAN, "DBSCAN")
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - DBSCAN FINISHED")
 
     print((time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + " - KMeans BEGIN")

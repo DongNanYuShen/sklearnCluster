@@ -3,7 +3,7 @@
 # 最后一步的聚类方法则提供了两种，K-Means算法和discrete算法。
 import numpy as np
 from sklearn.cluster import SpectralClustering, KMeans
-from sklearn.metrics import accuracy_score, adjusted_rand_score
+from sklearn.metrics import accuracy_score, adjusted_rand_score, normalized_mutual_info_score
 
 
 # 执行sklearn谱聚类，取最优结果返回
@@ -11,26 +11,35 @@ def RunStanderSpectralClustering(X, y):
     y_best = y
     acc_best = 0.0
     ari_best = 0.0
+    nmi_best = 0.0
     n_clusters_best = 6
     gamma_best = 0.01
-    for n_clusters in [6, 7, 8, 9]:
-        for gamma in np.arange(0.1, 0.7, 0.05):
+    for n_clusters in [6]:
+        for gamma in np.arange(1, 11, 1):
             sc = SpectralClustering(n_clusters=n_clusters, gamma=gamma, n_jobs=-1).fit(X)
             y_pred = sc.labels_
             acc = accuracy_score(y, y_pred)
             ari = adjusted_rand_score(y, y_pred)
+            nmi = normalized_mutual_info_score(y, y_pred)
             if ari > ari_best:
                 n_clusters_best = n_clusters
                 gamma_best = gamma
                 y_best = y_pred
                 ari_best = ari
+            if nmi > nmi_best:
+                n_clusters_best = n_clusters
+                gamma_best = gamma
+                y_best = y_pred
+                nmi_best = nmi
+            if acc > acc_best:
+                n_clusters_best = n_clusters
+                gamma_best = gamma
+                y_best = y_pred
+                acc_best = acc
             print(
                 "Spectral Clustering " + (" gamma=" + str(gamma) + "; n_clusters=" + str(n_clusters)) + " ari: " + str(
-                    ari) + "   acc:" + str(acc))
-    print("Spectral Clustering Best:" + " n=" +str(n_clusters_best) + " gamma=" + str(gamma_best) + " acc=" + str(acc_best) + " ari=" + str(ari_best))
-    print(n_clusters_best)
-    print(gamma_best)
-    print(acc_best)
+                    ari) + "   acc:" + str(acc) + "   nmi:" + str(nmi))
+    print("Spectral Clustering Best:" + " n=" +str(n_clusters_best) + " gamma=" + str(gamma_best) + " acc=" + str(acc_best) + " ari=" + str(ari_best) + " nmi=" + str(nmi_best))
     np.savetxt("y_best_pred_by_spectral_clustering", y_best)
     return y_best
 
